@@ -17,6 +17,7 @@ writeRaster(ppt_m, "covars_10k/ppt_m.tif",format = 'GTiff', overwrite = T)
 clim = stack(tmax_m,tmin_m,ppt_m)
 names(clim) = c("tmax","tmin","ppt")
 
+### Deforestation and reforestation data from GFW ###
 tiles <- calc_gfc_tiles(test_poly)
 plot(tiles)
 plot(test_poly, lt=2, add=TRUE)
