@@ -1,6 +1,6 @@
 
 ##covariates
-library(worldclim) #download worldclim data
+library(geodata) #download worldclim data
 library(gfcanalysis) #download reforestation and deforestation data
 ##spatial mapping and plotting packages
 library(ggplot2)
@@ -13,6 +13,10 @@ library(rgeos)
 library(rgdal)
 library(sf)
 library(tmap)
+library(plyr)
+library(doParallel)
+library(foreach)
+library(coda)
 ##spatial modeling packages
 library(seegSDM)      #generation of background points biased on population density
 library(dismo)
@@ -25,3 +29,4 @@ library(caret)        # an aggregator package for performing many machine learni
 library(kableExtra)   # Compile ROC reports
 library(blockCV)      # spatial cross-validation
 library(randomForest)
+library(embarcadero)

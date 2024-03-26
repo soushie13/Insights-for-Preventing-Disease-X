@@ -1,0 +1,110 @@
+﻿Year,Country,Town/village,y,x,Virus
+1976,South Sudan,Nzara,4.633031,"	28.24863100",SUDV
+1976,Zaire,Yambuku,2.81667,22.2333,EBOV
+1979,South Sudan,Nzara,4.633031,"	28.24863100",SUDV
+1994,Gabon,Makokou,0.566667,12.866667,EBOV
+1995,Zaire,Kikwit,-5.038611,18.818056,EBOV
+1996,Gabon,Mayibout 2 ,1.168600412,13.16653489,EBOV
+1997,Gabon,Booue,-0.1,11.933333,EBOV
+2000,Uganda,Rwot-Obillo,2.899421989,32.22891817,SUDV
+2001,Gabon,Mekambo,1.010279035,13.9516315,EBOV
+2002,Republic of Congo,Yembelangoye,-0.19,14.345,EBOV
+2003,Republic of Congo,Mbomo village,0.493742157,14.67872268,EBOV
+2004,south Sudan,Yambio town,4.575884038,28.39791061,SUDV
+2005,Republic of Congo,Etombi,0.023198156,14.89057669,EBOV
+2007,Democratic republic of Congo,Ndongo 2 ,-5.223909594,21.42030166,EBOV
+2007,Uganda,Bundibugyo,0.708198728,30.06199708,BDBV
+2008,Democratic republic of Congo,Mweka,-4.848548992,21.56453055,EBOV
+2011,Uganda,Nakisamata village,0.64847,32.72498,SUDV
+2012,Uganda,Kibale,0.789957865,31.07737498,SUDV
+2012,Democratic republic of Congo,Isiro,2.760106023,27.63122084,BDBV
+2012,Uganda,Nyimbwa,0.62010922,32.53455627,SUDV
+2013,Guinea,Meliandou,8.616038923,-10.06116103,EBOV
+2014,democratic republic of Congo,Ikanamongo Village,-0.423716691,20.58726183,EBOV
+2017,democratic republic of Congo,Likali,3.362214311,23.88497413,EBOV
+2018,democratic republic of Congo,Ikoko-Impenge,-0.736329225,18.42126917,EBOV
+2018,democratic republic of Congo,Mangina,0.605101918,29.30920385,EBOV
+2020,democratic republic of Congo,Mbandaka,0.039565514,18.27347942,EBOV
+2021,democratic republic of Congo,Benia,0.022375777,28.66952231,EBOV
+2021,Guinea,Gouecke,8.028159602,-8.721712582,EBOV
+2021,democratic republic of Congo,beni,0.493561786,29.45579395,EBOV
+2022,Uganda,Madudu,0.685486955,31.48144639,SUDV
+2022,Democratic republic of Congo,Beni,0.493561786,29.45579395,EBOV
+2023,Democratic republic of Congo,Mbandaka,0.04059228,18.26991011,EBOV
+1980,Kenya,Kitum Cave ,1.032378484,34.75814964,MARV
+1987,Kenya,Kitum Cave ,1.032378484,34.75814964,RAVV
+1998,Democratic republic of Congo,Goroumbwa,3.100221339,29.58356215,MARV & RAVV
+2004,Angola,Uige,-7.608487222,15.06585302,MARV
+2007,Uganda,Kitaka mines,0.227685303,30.37429637,MARV & RAVV
+2008,Uganda,Python cave,-0.358195879,29.92673444,MARV
+2008,Uganda,Python cave,-0.358195879,29.92673444,MARV
+2012,Uganda,Kitwe,-0.127433727,30.50537942,MARV
+2014,Uganda,Mpigi,0.228397164,32.32001886,MARV
+2017,Uganda,Tulwo,1.385047306,34.64138286,MARV
+2021,Guinea,Temessadou M Boke,8.53501354,-10.22959439,MARV
+2022,Ghana,Ashanti region,6.257876467,-1.531725046,MARV
+2023,Equatorial Guinea,Nsock Nsomo,1.128886251,11.2674021,MARV
+2023,Tanzania,Goziba Island,-1.471818317,32.61009214,MARV
+2009,Democratic Republic of Congo,Mangala,-4.650072888,18.93759898,BASV
+1996,Australia,Rockhampton,-23.34373237,150.5398431,Australian bat lyssavirus 
+1996,Australia,Mackay,-21.1430338,149.1815197,Australian bat lyssavirus 
+2012,Australia,Whitsundays,-20.27545095,148.9984774,Australian bat lyssavirus 
+1969,Nigeria,Ibadan,7.411258122,3.894205068,Mokola lyssavirus
+1971,Nigeria,Ibadan,7.40874606,3.871960254,Mokola lyssavirus
+1970,South Africa,NW Province,-25.7476754,26.75573712,Duvenhage lyssavirus
+2006,South Africa,NW Province,-25.38446179,26.5450554,Duvenhage lyssavirus
+2007,Kenya,camp,-3.191479713,38.47345725,Duvenhage lyssavirus
+2002,United Kingdom,Guthrie,56.64410445,-2.708746283,European bat 2 lyssavirus
+1998,Malaysia,Ipoh,4.726213405,101.0949881,Nipah
+2001,India,Siliguri,26.71092766,88.42774411,Nipah
+2001,Bangladesh,Chandpur,23.84674827,88.64662108,Nipah
+2003,Bangladesh,Bil Joania,24.80702489,88.63525765,Nipah
+2004,Bangladesh,Kazipara,23.86936788,89.37781868,Nipah
+2004,Bangladesh,Fairidpur,23.637393,89.76052135,Nipah
+2005,Bangladesh,Basail,24.22886259,90.0514558,Nipah
+2007,India,Belechuapara,23.81467458,88.56680905,Nipah
+2007,Bangladesh,Haripur,25.84414124,88.1360684,Nipah
+2007,Bangladesh,Sadar Kushtia,23.84352999,89.09612448,Nipah
+2008,Bangladesh,Manikganj,23.74820629,89.71692527,Nipah
+2010,Bangladesh,Bhanga,23.403281,89.98188996,Nipah
+2011,Bangladesh,Hatibandha,26.14025923,89.13675786,Nipah
+2018,India,Peramba,11.56410411,75.75874759,Nipah
+2019,India,Vavakkad,10.16665194,76.20870352,Nipah
+2021,India, Chathamangalam,11.29115403,75.91531978,Nipah
+2023,Bangladesh,Natore,24.40921163,88.9729078,Nipah
+2023,India,Maruthonkara,11.65119487,75.80144435,Nipah
+2023,Bangladesh,Pabna,24.00634524,89.27561379,Nipah
+2023,Bangladesh,Rajshahi,24.39926437,88.61699253,Nipah
+2023,Bangladesh,Shariatpur,23.21995573,90.34718399,Nipah
+2023,Bangladesh,Rajbari,23.76934532,89.66095119,Nipah
+2023,Bangladesh,Narsingdi,23.97416703,90.73601786,Nipah
+2023,Bangladesh,Naogoan,24.75838636,88.94765812,Nipah
+2012,China,Tongguan,23.28924003,101.3734947,Mojiang
+2018,China,Langya,35.07685626,118.8269416,Langya
+1994,Australia,Hendra,-27.41993839,153.0752767,Hendra
+1994,Australia,Mackay,-21.14409669,149.1768331,Hendra
+2004,Australia,Cairns,-16.8758878,145.7336655,Hendra
+2008,Australia,Redland,-27.58446545,153.2605878,Hendra
+2009,Australia,Cawarral,-23.24939317,150.6750369,Hendra
+1997,Australia,Menangle,-34.14528902,150.7225295,Menangle
+2012,Saudi Arabia,Jeddah,21.55025872,39.25129536,MERS-CoV
+2014,UAE, Al Ain City,24.20877193,55.67219829,MERS-CoV
+2015,Saudi Arabia,Hofuf,25.36024833,49.60300125,MERS-CoV
+2014,Yemen,Sana a,15.32275329,44.17965205,MERS-CoV
+2014,Saudi Arabia,Najran,17.5781076,44.23749031,MERS-CoV
+2022,Saudi Arabia,Taif,21.28318423,40.45228273,MERS-CoV
+2022,Saudi Arabia,Muhayil,18.54355662,42.05190738,MERS-CoV
+2015,Saudi Arabia,Riyadh,24.81851756,46.73442778,MERS-CoV
+2014,Saudi Arabia,Wadi adDawasir,20.44453573,44.81116321,MERS-CoV
+2014,Saudi Arabia,Al-Kharj,24.16357655,47.32280047,MERS-CoV
+2002,China,Shunde,22.87054999,113.1616816,SARS-CoV1
+2002,China,Shenzhen,22.53764723,114.0512269,SARS-CoV1
+2002,China,Zhaoqing,23.05743399,112.461819,SARS-CoV1
+2002,China,Zhongshan,22.52417514,113.3884878,SARS-CoV1
+2019,China,Wuhan,30.61779553,114.2635439,SARS-CoV2
+2015,Saudi Arabia,Buraydah,26.34665338,43.96375992,MERS-CoV
+2015,Saudi Arabia,Tayma,27.62123507,38.5291913,MERS-CoV
+2015,Saudi Arabia,Khobar,26.22526864,50.19758995,MERS-CoV
+2022,Qatar,Al Shahaniyah,25.41340026,51.18973252,MERS-CoV
+2015,Qatar,Doha,25.2727208,51.50535554,MERS-CoV
+2014,Yemen,Shibam,15.92026469,48.63562701,MERS-CoV
