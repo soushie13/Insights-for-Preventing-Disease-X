@@ -1,0 +1,74 @@
+
+Iterations = 2001:3996
+Thinning interval = 5 
+Number of chains = 2 
+Sample size per chain = 400 
+
+1. Empirical mean and standard deviation for each variable,
+   plus standard error of the mean:
+
+                          Mean      SD Naive SE Time-series SE
+beta.(Intercept)      -2.50764 0.13127 0.004641       0.006298
+beta.alt               0.01635 0.14984 0.005298       0.010650
+beta.bats              0.29839 0.15424 0.005453       0.010076
+beta.bushmeat_global   0.45227 0.08753 0.003095       0.004207
+beta.treeloss          0.03325 0.09914 0.003505       0.005436
+beta.mammals           0.05928 0.17069 0.006035       0.014258
+beta.lulc             -0.08870 0.13327 0.004712       0.006964
+beta.pop              -0.16410 0.16433 0.005810       0.007554
+beta.ppt_m             0.18404 0.12034 0.004255       0.005773
+beta.tmin_m            0.34289 0.17996 0.006363       0.012927
+beta.travel            0.03355 0.12870 0.004550       0.005528
+Deviance             654.85265 4.74169 0.167644       0.226679
+
+2. Quantiles for each variable:
+
+                           2.5%       25%       50%        75%
+beta.(Intercept)      -2.757490  -2.59082  -2.50903  -2.416903
+beta.alt              -0.253628  -0.08889   0.01932   0.109514
+beta.bats             -0.003462   0.19764   0.30176   0.396957
+beta.bushmeat_global   0.284322   0.39124   0.45114   0.514646
+beta.treeloss         -0.162908  -0.03116   0.03564   0.103352
+beta.mammals          -0.289591  -0.04824   0.06372   0.177562
+beta.lulc             -0.351827  -0.17944  -0.08514   0.008124
+beta.pop              -0.515170  -0.26097  -0.15006  -0.049284
+beta.ppt_m            -0.062630   0.10744   0.18535   0.265916
+beta.tmin_m            0.020274   0.21716   0.33086   0.469977
+beta.travel           -0.244198  -0.04503   0.04151   0.123064
+Deviance             647.379481 651.16621 654.37431 657.699578
+                        97.5%
+beta.(Intercept)      -2.2498
+beta.alt               0.3247
+beta.bats              0.6001
+beta.bushmeat_global   0.6237
+beta.treeloss          0.2188
+beta.mammals           0.3712
+beta.lulc              0.1649
+beta.pop               0.1161
+beta.ppt_m             0.4159
+beta.tmin_m            0.7214
+beta.travel            0.2596
+Deviance             665.9078
+
+
+ 
+ 
+Potential scale reduction factors:
+
+                     Point est. Upper C.I.
+beta.(Intercept)          1.002       1.01
+beta.alt                  1.000       1.00
+beta.bats                 1.011       1.05
+beta.bushmeat_global      1.002       1.01
+beta.treeloss             1.001       1.01
+beta.mammals              1.002       1.01
+beta.lulc                 0.999       1.00
+beta.pop                  1.000       1.00
+beta.ppt_m                1.006       1.03
+beta.tmin_m               1.001       1.01
+beta.travel               1.007       1.03
+Deviance                  0.999       1.00
+
+Multivariate psrf
+
+1.02

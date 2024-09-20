@@ -4,15 +4,20 @@
 ##
 ##================================================================================
 # stack meta-covariates
-pr <- raster("rf_pred_bat.tif")
+prf <- raster("rf_pred_bat.tif")
 pbrt <- raster("brt_pred_bat.tif")
-pbart <- raster("bart_bat.tif")
-preds= stack(pr, pbrt, pbart)
-names(preds) = c("RandomForest","BRT","BART")
-plot(preds)
+prob.p.bi <- raster("Binomial_pred_bats.tif")
 
+prf <- raster("rf_pred_rat.tif")
+pbrt <- raster("brt_pred_rat.tif")
+prob.p.bi <- raster("Binomial_pred_rats.tif")
+preds= stack(prf, pbrt,prob.p.bi)
+names(preds) = c("RandomForest","BRT", "biniomal")
+
+#preds=covars
 #extract data
-obs.data <- read.csv("~/Documents/GitHub/Disease_X/bat_X.csv", header = TRUE)
+obs.data <- read.csv("bat_X.csv", header = TRUE)
+obs.data <- read.csv("rat_X.csv", header = TRUE)
 coordinates(obs.data)<-~x+y
 p <- obs.data
 presence = p@coords
@@ -20,8 +25,14 @@ presvals <- raster::extract(preds, presence, cellnumber=TRUE)
 prevals_coords =cbind(presence,presvals)
 ##create the pseudo-absences##
 pop_d <- raster("pop_density.tif")
+Sys.setenv(GITHUB_PAT = "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")
+
+GITHUB_PAT="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"
+remotes::install_version("rgeos", version = "0.6-4")
+remotes::install_version("rgdal", version = "1.6-7")
+
 remotes::install_github("SEEG-Oxford/seegSDM")
-set.seed(10)
+set.seed(2024)
 bg <- bgSample(pop_d,
                n = 1000,
                prob = TRUE,
@@ -93,60 +104,6 @@ seed.mcmc <- round(runif(nchains,0,1e6))
 pa.norm$Trials <- c(1)
 pa.norm$Presences <- pa.norm$pb
 
-##=============================================================================
-##
-## 5.1. Binomial regression
-##=============================================================================
-
-mod.binomial <- foreach (i=1:nchains, .packages="hSDM") %dopar% {
-  mod <- hSDM.binomial(presences=pa.norm$Presences,
-                       trials=pa.norm$Trials,
-                       suitability=~ RandomForest + BRT + BART,
-                       data=pa.norm,
-                       suitability.pred=env.df.pred.complete,
-                       burnin=2000,
-                       mcmc=2000, thin=5,
-                       beta.start=beta.start[i],
-                       mubeta=0, Vbeta=1.0E6,
-                       seed=seed.mcmc[i], verbose=1,
-                       save.p=0)
-  return(mod)
-}
-
-## Extract list of MCMCs from output
-binomial.env.mcmc <- mcmc.list(lapply(mod.binomial,"[[","mcmc"))
-
-sink(file="Results/binomial_mcmc_summary.txt")
-summary(binomial.env.mcmc)
-sink()
-## Outputs summary
-bionomial.env.stat <- summary(binomial.env.mcmc)$statistics
-sink(file="Results/binomial_mcmc_summary.txt")
-summary(binomial.env.mcmc)
-cat(rep("\n",3))
-gelman.diag(binomial.env.mcmc)
-sink()
-## Deviance
-deviance.bionomial.env <- bionomial.env.stat["Deviance","Mean"]
-
-## Plot trace and posterior distributions
-pdf("Results/bionomial_mcmc_trace.pdf")
-plot(binomial.env.mcmc)
-dev.off()
-
-## Prediction on the landscape
-prob.p.bi <- subset(preds,1) ## create a raster for predictions
-values(prob.p.bi)[w] <- mod.binomial[[1]]$theta.pred ## assign predicted values
-values(prob.p.bi)[!w] <- NA ## set NA where no environmental data
-## Plot the predictions
-pdf(file="Results/binomialpredictions.pdf")
-plot(prob.p.bi)
-plot(pa.norm[pa.norm$pb==0,],pch=".",col=grey(0.5),add=TRUE)
-plot(pa.norm[pa.norm$pb>0,],pch=3,add=TRUE)
-dev.off()
-
-## Export the results as GeoTIFF
-writeRaster(prob.p.bi,filename="Binomial_pred.tif",overwrite=TRUE)
 
 
 
@@ -168,7 +125,7 @@ cells.pred <- which(w) ## Vector w indicates the cells with environmental inform
 mod.binomial.icar <- foreach (i=1:nchains, .packages="hSDM") %dopar% {
   mod <- hSDM.binomial.iCAR(presences=pa.norm$Presences,
                             trials=pa.norm$Trials,
-                            suitability=~ RandomForest + BRT + BART,
+                            suitability=~ RandomForest + BRT + biniomal,
                             data=pa.norm,
                             ## Spatial structure
                             spatial.entity=pa.norm$cells,
@@ -194,7 +151,14 @@ binomial.icar.mcmc <- mcmc.list(lapply(mod.binomial.icar,"[[","mcmc"))
 
 ## Outputs summary
 bionomial.icar.stat <- summary(binomial.icar.mcmc)$statistics
-sink(file="results/binomial.icar_mcmc_summary.txt")
+sink(file="binomial.icar_mcmc_summary_bat.txt")
+summary(binomial.icar.mcmc)
+cat(rep("\n",3))
+gelman.diag(binomial.icar.mcmc)
+sink()
+
+bionomial.icar.stat <- summary(binomial.icar.mcmc)$statistics
+sink(file="binomial.icar_mcmc_summary_rat.txt")
 summary(binomial.icar.mcmc)
 cat(rep("\n",3))
 gelman.diag(binomial.icar.mcmc)
@@ -203,22 +167,31 @@ sink()
 deviance.bionomial.icar <- bionomial.icar.stat["Deviance","Mean"]
 
 ## Plot trace and posterior distributions
-pdf("results/bionomial.icar_mcmc_trace.pdf")
+pdf("bionomial.icar_mcmc_trace_bat.pdf")
+plot(binomial.icar.mcmc)
+dev.off()
+pdf("bionomial.icar_mcmc_trace_rat.pdf")
 plot(binomial.icar.mcmc)
 dev.off()
 ## Spatial random effects
-rho <- subset(covars,1) ## create a raster
+rho <- subset(preds,1) ## create a raster
 values(rho) <- mod.binomial.icar[[1]]$rho.pred
-pdf(file="results/binomial.iCAR_random_effects.pdf")
+pdf(file="binomial.iCAR_random_effects_bat.pdf")
+plot(rho)
+dev.off()
+
+rho <- subset(preds,1) ## create a raster
+values(rho) <- mod.binomial.icar[[1]]$rho.pred
+pdf(file="binomial.iCAR_random_effects_rat.pdf")
 plot(rho)
 dev.off()
 ## Prediction on the landscape
 prob.p.b <- subset(preds,1) ## create a raster for predictions
 values(prob.p.b)[w] <- mod.binomial.icar[[1]]$theta.pred
 values(prob.p.b)[w] <- apply(mod.binomial.icar[[1]]$theta.pred,2,mean) ## assign predicted values
+values(prob.p.b)[w] <- mod.binomial.icar[[1]]$theta.pred
 values(prob.p.b)[!w] <- NA ## set NA where no environmental data
 ## Plot the predictions
-pdf(file="Results/binomial.icar_predictions.pdf")
 plot(prob.p.b)
 plot(pa.norm[pa.norm$pb==0,],pch=".",col=grey(0.5),add=TRUE)
 plot(pa.norm[pa.norm$pb>0,],pch=3,add=TRUE)
@@ -226,3 +199,21 @@ dev.off()
 
 ## Export the results as GeoTIFF
 writeRaster(prob.p.b,filename="binomial_icar_pred_bat.tif",overwrite=TRUE)
+
+writeRaster(prob.p.b,filename="binomial_icar_pred_rat.tif",overwrite=TRUE)
+
+#Matrix with CI for each pixel
+#prob.p.quant <- apply(mod.binomial.icar[[1]]$theta.pred,2,quantile, c(0.025,0.975))
+#prob.p.mean <- apply(mod.binomial.icar[[1]]$theta.pred,2,mean)
+prob.p.sd <- apply(mod.binomial.icar[[1]]$theta.pred,2,sd)
+
+#map uncertainity
+prob.p.stdev <- subset(preds,1)
+#assign values
+values(prob.p.stdev)[w]<- prob.p.sd
+uncertainity <- prob.p.stdev
+plot(uncertainity)
+
+writeRaster(uncertainity,filename="uncertainity_bat.tif",overwrite=TRUE)
+
+writeRaster(uncertainity,filename="uncertainity_rat.tif",overwrite=TRUE)

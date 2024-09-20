@@ -1,0 +1,72 @@
+
+Iterations = 2001:3996
+Thinning interval = 5 
+Number of chains = 2 
+Sample size per chain = 400 
+
+1. Empirical mean and standard deviation for each variable,
+   plus standard error of the mean:
+
+                      Mean      SD Naive SE Time-series SE
+beta.(Intercept)  -2.59977 0.18512 0.006545       0.014373
+beta.alt          -0.58573 0.13831 0.004890       0.006711
+beta.rats          0.31582 0.10971 0.003879       0.005093
+beta.cropland     -0.53474 0.14872 0.005258       0.007856
+beta.treeloss      0.03609 0.08384 0.002964       0.004360
+beta.lulc         -0.25761 0.12783 0.004519       0.007619
+beta.pop          -1.29538 0.48671 0.017208       0.038134
+beta.ppt_m         0.15099 0.11970 0.004232       0.006833
+beta.tmin_m       -0.37741 0.10922 0.003861       0.005539
+beta.travel       -0.84720 0.35051 0.012392       0.019061
+Deviance         772.78071 4.51912 0.159775       0.222520
+
+2. Quantiles for each variable:
+
+                      2.5%       25%       50%       75%
+beta.(Intercept)  -3.00389  -2.71456  -2.59205  -2.46629
+beta.alt          -0.87093  -0.67197  -0.57837  -0.49187
+beta.rats          0.11129   0.24261   0.31706   0.38745
+beta.cropland     -0.83708  -0.63325  -0.53307  -0.42997
+beta.treeloss     -0.11804  -0.02222   0.03557   0.09272
+beta.lulc         -0.51165  -0.34405  -0.25862  -0.16963
+beta.pop          -2.36203  -1.57542  -1.24568  -0.96637
+beta.ppt_m        -0.08958   0.07109   0.14730   0.23279
+beta.tmin_m       -0.59486  -0.44664  -0.37373  -0.30317
+beta.travel       -1.67003  -1.03273  -0.80737  -0.59888
+Deviance         765.85719 769.38261 772.06842 775.40319
+                     97.5%
+beta.(Intercept)  -2.26676
+beta.alt          -0.32740
+beta.rats          0.53488
+beta.cropland     -0.25070
+beta.treeloss      0.20475
+beta.lulc         -0.01181
+beta.pop          -0.44684
+beta.ppt_m         0.38807
+beta.tmin_m       -0.17013
+beta.travel       -0.27786
+Deviance         783.24622
+
+
+ 
+ 
+Potential scale reduction factors:
+
+                 Point est. Upper C.I.
+beta.(Intercept)       1.07       1.28
+beta.alt               1.00       1.01
+beta.rats              1.01       1.05
+beta.cropland          1.01       1.05
+beta.treeloss          1.00       1.00
+beta.lulc              1.00       1.00
+beta.pop               1.03       1.11
+beta.ppt_m             1.03       1.15
+beta.tmin_m            1.01       1.05
+beta.travel            1.03       1.14
+Deviance               1.00       1.02
+
+Multivariate psrf
+
+1.07
+
+deviance.bionomial.env[1] 772.7807

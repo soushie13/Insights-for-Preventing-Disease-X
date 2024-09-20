@@ -7,6 +7,7 @@ library(ggplot2)
 library(rasterVis)
 library(maptools)
 library(maps)
+library(terra)
 library(dplyr)
 library(raster)
 library(rgeos)
@@ -30,3 +31,5 @@ library(kableExtra)   # Compile ROC reports
 library(blockCV)      # spatial cross-validation
 library(randomForest)
 library(embarcadero)
+detach("package:embarcadero", unload=TRUE)
+library(hSDM)

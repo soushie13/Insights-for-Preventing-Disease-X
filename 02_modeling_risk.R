@@ -11,7 +11,7 @@ p <- obs.data
 presence = p@coords
 ##create the pseudo-absences##
 pop_d <- raster("pop_density.tif")
-remotes::install_github("SEEG-Oxford/seegSDM")
+#remotes::install_github("SEEG-Oxford/seegSDM")
 set.seed(10)
 bg <- bgSample(pop_d,
                n = 1000,
@@ -27,6 +27,8 @@ absence<- data.frame(bg)
 predictors <- terra::rast(covars)
 # Create SWD object
 swd_data <- prepareSWD(species = "bat_pathogens", p = presence, a = absence,
+                       env = predictors)
+swd_data <- prepareSWD(species = "rat_pathogens", p = presence, a = absence,
                        env = predictors)
 # Split presence locations in training (80%) and testing (20%) datasets
 datasets <- trainValTest(swd_data, test = 0.2, seed = 25)
@@ -101,12 +103,19 @@ exp_6 <- randomSearch(rf_model, hypers = h, metric = "auc", test = val, pop = 10
 exp_6 <- randomSearch(rf_model, hypers = h, metric = "tss", test = val, pop = 10, seed = 65466)
 exp_6@results
 exp_7 <- optimizeModel(rf_model, hypers = h, metric = "tss", test = val, pop = 15, gen = 2, keep_best = 0.4, keep_random = 0.2, mutation_chance = 0.4, seed = 798)
+# Index of the best model in the experiment
+index <- which.max(exp_6@results$test_TSS)
+# New train dataset containing only the selected variables
+new_train <- exp_6@models[[index]]@data 
 
+# Merge only presence data
+merged_data <- mergeSWD(new_train,
+                        val) 
 ## fit final random forest model
 #merge training and validation data
 merged_data <- mergeSWD(train, val)
-set.seed(2024)
-RFfinal_model <- train("RF", data = merged_data, ntree = 500, nodesize = 4)
+set.seed(1335)
+RFfinal_model <- train("RF", data = merged_data, ntree = 500)
 auc(RFfinal_model, test = test)
 tss(RFfinal_model, test = test)
 
@@ -117,11 +126,17 @@ par(mfrow=c(1,1))
 plot(pr, main='Random Forest, regression')
 plot(wrld_simpl, add=TRUE, border='dark grey')
 ##save prediction raster
-pr_bat_pop <- raster::raster(pr)
-writeRaster(pr_bat_pop, "rf_pred_bat_pop.tif",format = 'GTiff', overwrite = T)
+pr_bat <- raster::raster(pr)
+writeRaster(pr_bat, "rf_pred_bat.tif",format = 'GTiff', overwrite = T)
+pr_rat<- raster::raster(pr)
+writeRaster(pr_rat, "rf_pred_rat.tif",format = 'GTiff', overwrite = T)
+
 plotROC(RFfinal_model)
 modelReport(RFfinal_model,type = "cloglog", test = test,
-            jk = TRUE, permut = 10, folder = "RF")
+            jk = TRUE, permut = 10, folder = "RF_bat")
+modelReport(RFfinal_model,type = "cloglog", test = test,
+            jk = TRUE, permut = 10, folder = "RF_rat")
+
 
 varImp(RFfinal_model)
 ##===============================================
@@ -203,12 +218,29 @@ h <- list(n.trees=seq(500), shrinkage=seq(0.5))
 exp_6 <- randomSearch(brt_model, hypers = h, metric = "auc", test = val, pop = 10, seed = 345)
 exp_6 <- randomSearch(brt_model, hypers = h, metric = "tss", test = val, pop = 10, seed = 345)
 exp_6@results
+# Index of the best model in the experiment
+index <- which.max(exp_6@results$test_TSS)
+# New train dataset containing only the selected variables
+new_train <- exp_6@models[[index]]@data 
 
+# Merge only presence data
+merged_data <- mergeSWD(new_train,
+                        val) 
+head(exp_6@results)
+exp_7 <- optimizeModel(brt_model, 
+                       hypers = h, 
+                       metric = "tss", 
+                       test = val, 
+                       pop = 15, 
+                       gen = 2, 
+                       seed = 798)
 ## fit final BRT model
 #merge training and validation data
 merged_data <- mergeSWD(train, val)
-set.seed(2022)
-brtfinal_model <- train("BRT", data = merged_data, n.trees=500, learning.rate = 0.0025, bag.fraction = 0.5)
+set.seed(2024)
+#brtfinal_model <- train("BRT", data = merged_data,family = "bernoulli",n.trees= 500, tree.complexity = 5,learning.rate = 0.01, bag.fraction = 0.5)
+brtfinal_model <- train("BRT", data = merged_data,family = "bernoulli")
+
 auc(brtfinal_model, test = test)
 tss(brtfinal_model, test = test)
 #predict distribution
@@ -220,7 +252,13 @@ plot(pbrt, main='BRT prediction')
 pbrt_bat <- raster::raster(pbrt)
 writeRaster(pbrt_bat, "brt_pred_bat.tif",format = 'GTiff', overwrite = T)
 plotROC(brtfinal_model)
-modelReport(brtfinal_model,folder = "BRT",type = "cloglog", test = test,
+modelReport(brtfinal_model,folder = "BRT_bat",type = "cloglog", test = test,
+            response_curves = TRUE,jk = TRUE, permut = 10)
+
+pbrt_rat <- raster::raster(pbrt)
+writeRaster(pbrt_rat, "brt_pred_rat.tif",format = 'GTiff', overwrite = T)
+plotROC(brtfinal_model)
+modelReport(brtfinal_model,folder = "BRT_rat",type = "cloglog", test = test,
             response_curves = TRUE,jk = TRUE, permut = 10)
 
 varImp(brtfinal_model)
@@ -267,4 +305,146 @@ writeRaster(uncertinity, "uncertainitybart_bat.tif" ,format = 'GTiff', overwrite
 ###geographical null model using geographical distance
 null_model2 <- convHull(pres_train, lonlat =TRUE)
 null_e <- evaluate(null_model2, p= pres_test, a=backg_test)
+
+
+##=============================================================================
+##
+##  Binomial regression
+##=============================================================================
+preds=covars
+p <- obs.data
+presence = p@coords
+presvals <- raster::extract(preds, presence, cellnumber=TRUE)
+prevals_coords =cbind(presence,presvals)
+absence<- data.frame(bg)
+absvals <- raster::extract(preds, absence, cellnumber=TRUE)
+absvals_coords =cbind(absence,absvals)
+pb <- c(rep(1, nrow(prevals_coords)), rep(0, nrow(absvals_coords)))
+pa <- data.frame(cbind(pb, rbind(prevals_coords, absvals_coords)))
+
+## Extract environmental values and cell number for observations
+pa$Presences <- pa$pb
+pa$Trials <- c(1)
+
+## omit rows with missing data
+pa.cc=na.omit(pa)
+
+
+
+## Normalized continuous covariates
+pa.norm <- pa.cc
+Mean <- vector()
+Sd <- vector()
+for (i in c(5:14)) {
+  m <- mean(pa.cc[,i],na.rm=TRUE)
+  s <- sd(pa.cc[,i],na.rm=TRUE)
+  Mean <- c(Mean,m)
+  Sd <- c(Sd,s)
+  pa.norm[,i] <- (pa.cc[,i]-m)/s
+}
+## Data-frame with mean and sd for each variable
+df.mean.sd <- as.data.frame(rbind(Mean,Sd))
+names(df.mean.sd) <- names(pa.norm)[c(5:14)]
+
+## Raster stack for predictions (with normalized covariates)
+env <- preds
+
+for (i in c(5:14)) {
+  var.name <- names(pa.norm)[i] ## Variable name
+  w <- which(names(env)==var.name) ## Position in the stack 
+  m <- df.mean.sd[1,var.name] ## Mean
+  s <- df.mean.sd[2,var.name] ## Sd
+  orig <- values(subset(env,w)) ## Original values
+  trans <- (orig-m)/s ## Transformed values
+  env[[w]][] <- trans
+}
+
+## Select only grid cells with no NA
+env.df.pred <- as.matrix(env)
+w <- complete.cases(env.df.pred) ## Note: w will be used to obtain the cell identifier for predictions in iCAR model
+env.df.pred.complete <- as.data.frame(env.df.pred[w,])
+
+## Make a cluster for parallel MCMCs
+nchains <- 2
+ncores <- nchains ## One core for each MCMC chains
+cores<-detectcores()
+clust <- makeCluster(2)
+registerDoParallel(clust)
+
+## Starting values and random seed
+seed <- 1234
+set.seed(seed)
+beta.start <- runif(nchains,-1,1)
+gamma.start <- runif(nchains,-1,1)
+Vrho.start <- runif(nchains,0,10)
+seed.mcmc <- round(runif(nchains,0,1e6))
+pa.norm$Trials <- c(1)
+pa.norm$Presences <- pa.norm$pb
+
+#bat covars: alt+ bats+ bushmeat_global+ treeloss+ mammals+ lulc+  pop+ ppt_m+  tmin_m+ travel
+#rat covars: alt+ rats+ Global_cropland_3km_2019+ treeloss+  lulc+  pop+ ppt_m+  tmin_m+ travel
+
+mod.binomial <- foreach (i=1:nchains, .packages="hSDM") %dopar% {
+  mod <- hSDM.binomial(presences=pa.norm$Presences,
+                       trials=pa.norm$Trials,
+                       suitability=~ alt+ bats+ bushmeat_global+ treeloss+ mammals+ lulc+  pop+ ppt_m+  tmin_m+ travel ,
+                       data=pa.norm,
+                       suitability.pred=env.df.pred.complete,
+                       burnin=2000,
+                       mcmc=2000, thin=5,
+                       beta.start=beta.start[i],
+                       mubeta=0, Vbeta=1.0E6,
+                       seed=seed.mcmc[i], verbose=1,
+                       save.p=0)
+  return(mod)
+}
+
+## Extract list of MCMCs from output
+binomial.env.mcmc <- mcmc.list(lapply(mod.binomial,"[[","mcmc"))
+sink(file="binomial_mcmc_summary_bat.txt")
+summary(binomial.env.mcmc)
+sink()
+sink(file="binomial_mcmc_summary_rat.txt")
+summary(binomial.env.mcmc)
+sink()
+## Outputs summary
+bionomial.env.stat <- summary(binomial.env.mcmc)$statistics
+sink(file="binomial_mcmc_summary_bat.txt")
+summary(binomial.env.mcmc)
+cat(rep("\n",3))
+gelman.diag(binomial.env.mcmc)
+sink()
+bionomial.env.stat <- summary(binomial.env.mcmc)$statistics
+sink(file="binomial_mcmc_summary_rat.txt")
+summary(binomial.env.mcmc)
+cat(rep("\n",3))
+gelman.diag(binomial.env.mcmc)
+sink()
+## Deviance
+deviance.bionomial.env <- bionomial.env.stat["Deviance","Mean"]
+
+## Plot trace and posterior distributions
+pdf("binomial_mcmc_trace_bat.pdf")
+plot(binomial.env.mcmc)
+dev.off()
+
+pdf("binomial_mcmc_trace_rat.pdf")
+plot(binomial.env.mcmc)
+dev.off()
+
+## Prediction on the landscape
+prob.p.bi <- subset(preds,1) ## create a raster for predictions
+values(prob.p.bi)[w] <- mod.binomial[[1]]$theta.pred ## assign predicted values
+values(prob.p.bi)[!w] <- NA ## set NA where no environmental data
+## Plot the predictions
+
+plot(prob.p.bi)
+plot(pa.norm[pa.norm$pb==0,],pch=".",col=grey(0.5),add=TRUE)
+plot(pa.norm[pa.norm$pb>0,],pch=3,add=TRUE)
+
+
+## Export the results as GeoTIFF
+writeRaster(prob.p.bi,filename="Binomial_pred_bats.tif",overwrite=TRUE)
+
+writeRaster(prob.p.bi,filename="Binomial_pred_rats.tif",overwrite=TRUE)
 
