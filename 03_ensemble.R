@@ -25,9 +25,6 @@ presvals <- raster::extract(preds, presence, cellnumber=TRUE)
 prevals_coords =cbind(presence,presvals)
 ##create the pseudo-absences##
 pop_d <- raster("pop_density.tif")
-Sys.setenv(GITHUB_PAT = "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")
-
-GITHUB_PAT="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"
 remotes::install_version("rgeos", version = "0.6-4")
 remotes::install_version("rgdal", version = "1.6-7")
 
